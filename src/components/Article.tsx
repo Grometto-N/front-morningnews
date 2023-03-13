@@ -42,17 +42,25 @@ export default function Article({title, author, description, urlToImage,isBookma
 		}
 
     // récupération de l'autorisation, puis ajout ou suppression des favoris
-		fetch(`${BACKENDADRESS}/${user.token}`)
-			.then(response => response.json())
-			.then(data => {
-				if (data.result && data.canBookmark) {
+    async function getAuthorisation(){
+      try{
+        console.log()
+        const response = await fetch(`${BACKENDADRESS}/users/canBookmark/${user.token}`);
+        const data = await response.json();
+
+        if (data.result && data.canBookmark) {
 					if(isBookmarked) {
 						dispatch(removeBookmark(theArticle));
 					} else {
 						dispatch(addBookmark(theArticle));
 					}
 				}
-			});
+
+      }catch(exception){
+          console.log("error",exception);
+      }
+    } 
+		getAuthorisation();
 	}
 
 

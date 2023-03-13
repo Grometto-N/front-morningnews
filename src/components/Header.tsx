@@ -1,3 +1,4 @@
+// composant gérant l'affichage du header
 import react from 'react';
 import styles from '../styles/Header.module.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -17,11 +18,11 @@ import { UserState } from '../reducers/user';
 import { getBackendAdress } from '@/modules/adress';
 
 
-// composant gérant l'affichage du header
-
+// définition du composant
 export default function Header() {
   const dispatch = useDispatch();
-  const BACKENDADRESS:string = getBackendAdress();
+  
+const BACKENDADRESS:string = getBackendAdress();
 
   // récupération des données sur l'utilisateur pour afficher un message avec le nom
   const user = useSelector((state:{user:UserState}) => state.user.value);
@@ -34,6 +35,9 @@ export default function Header() {
   const [signInUsername, setSignInUsername] = useState<string>('');
   const [signInPassword, setSignInPassword] = useState<string>('');
 
+
+
+
   // récupération de la date du jour au chargement
   useEffect(() => {
     setDate(new Date());
@@ -41,36 +45,52 @@ export default function Header() {
 
   // fonction gérant l'enregistrement d'un utilisateur en BDD puis mise à jour des données du reducer
   const handleRegister = () => {
-    fetch(`${BACKENDADRESS}/users/signup`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ username: signUpUsername, password: signUpPassword }),
-    }).then(response => response.json())
-      .then(data => {
+    async function registration(){
+      try{
+        const response = await fetch(`${BACKENDADRESS}/users/signup`, {
+                                  method: 'POST',
+                                  headers: { 'Content-Type': 'application/json' },
+                                  body: JSON.stringify({ username: signUpUsername, password: signUpPassword }),
+                                })
+        const data = await response.json();
+        
         if (data.result) {
           dispatch(login({ username: signUpUsername, token: data.token }));
           setSignUpUsername('');
           setSignUpPassword('');
           setIsModalVisible(false)
         }
-      });
+
+      }catch(exception){
+        console.log("erreur", exception)
+      }
+    }
+    registration();
   };
 
   // fonction gérant la connection d'un utilisateur, puis mise à jour des données du reducer
   const handleConnection = () => {
-    fetch(`${BACKENDADRESS}/users/signin`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ username: signInUsername, password: signInPassword }),
-    }).then(response => response.json())
-      .then(data => {
+    async function connection(){
+      try{
+        const response = await fetch(`${BACKENDADRESS}/users/signin`, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ username: signInUsername, password: signInPassword }),
+                          });
+        const data = await response.json();
+        
         if (data.result) {
           dispatch(login({ username: signInUsername, token: data.token }));
           setSignInUsername('');
           setSignInPassword('');
           setIsModalVisible(false)
         }
-      });
+
+      }catch(exception){
+        console.log("erreur", exception)
+      }
+    }
+    connection();
   };
 
   // fonction gérant la déconexion de l'utilisateur : on efface les favoris et les données de l'utilisateur
@@ -148,7 +168,7 @@ return (
         </div>
 
         {isModalVisible && <div id="react-modals">
-          <Modal getContainer="#react-modals" className={styles.modal} visible={isModalVisible} closable={false} footer={null}>
+          <Modal getContainer="#react-modals" className={styles.modal} open={isModalVisible} closable={true} onCancel={showModal} footer={null}>
             {modalContent}
           </Modal>
         </div>}

@@ -19,13 +19,20 @@ type ArticleProps = {
   inBookmarks : boolean;
 };
 
+type ArticleObject = {
+  title: string;
+	author: string;
+	description : string;
+  urlToImage : string;
+}
+
 export default function TopArticle({title, author, description,  urlToImage,  isBookmarked}: ArticleProps) {
   const dispatch = useDispatch();
   const BACKENDADRESS:string = getBackendAdress();
 
    // récupération des données sur l'utilisateur : servira pour les autorisations pour les favoris
   const user = useSelector((state:{user:UserState}) => state.user.value);
-  const theArticle = {title, author, description,  urlToImage}
+  const theArticle:ArticleObject = {title, author, description,  urlToImage}
 
   // fonction gérant l'ajout ou la suppression des favoris
   const handleBookmarkClick = () => {
@@ -34,17 +41,24 @@ export default function TopArticle({title, author, description,  urlToImage,  is
     }
 
     // récupération de l'autorisation, puis ajout ou suppression des favoris
-    fetch(`${BACKENDADRESS}/users/canBookmark/${user.token}`)
-      .then(response => response.json())
-      .then(data => {
+    async function getAuthorisation(){
+      try{
+        const response = await fetch(`${BACKENDADRESS}/users/canBookmark/${user.token}`);
+        const data = await response.json();
+
         if (data.result && data.canBookmark) {
-          if (isBookmarked) {
-            dispatch(removeBookmark(theArticle));
-          } else {
-            dispatch(addBookmark(theArticle));
-          }
-        }
-      });
+					if(isBookmarked) {
+						dispatch(removeBookmark(theArticle));
+					} else {
+						dispatch(addBookmark(theArticle));
+					}
+				}
+
+      }catch(exception){
+          console.log("error",exception);
+      }
+    } 
+		getAuthorisation();
   }
 
   // couleur de l'icône selon si l'article appartient ou non aux favoris 

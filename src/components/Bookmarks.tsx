@@ -1,4 +1,4 @@
-import react from 'react';
+import React, { FC } from 'react';
 import styles from '../styles/Bookmarks.module.css';
 
 import Head from 'next/head';

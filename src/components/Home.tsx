@@ -35,15 +35,22 @@ export default function Home() {
                                                               urlToImage: "" });
 
   // récupération des données au chargement
+
   useEffect(() => {
-    console.log(BACKENDADRESS);
-    fetch(`${BACKENDADRESS}/articles`)
-      .then(response => response.json())
-      .then(data => {
-        console.log(data);
+    async function getArticles(){
+      try{
+        const response = await fetch(`${BACKENDADRESS}/articles`);
+        const data = await response.json();
+
         setTopArticle(data.articles[0]);
         setArticlesData(data.articles.filter((data:ArticleObject, i:number) => i > 0));
-      });
+
+
+      }catch(exception){
+        console.log("error", exception);
+      }
+    }
+    getArticles();
   }, []);
 
 
