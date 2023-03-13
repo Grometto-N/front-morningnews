@@ -14,12 +14,14 @@ import { login, logout } from '../reducers/user';
 import { removeAllBookmark } from '../reducers/bookmarks';
 import { unhideArticles } from '../reducers/hiddenArticles';
 import { UserState } from '../reducers/user';
+import { getBackendAdress } from '@/modules/adress';
 
 
 // composant gérant l'affichage du header
 
 export default function Header() {
   const dispatch = useDispatch();
+  const BACKENDADRESS:string = getBackendAdress();
 
   // récupération des données sur l'utilisateur pour afficher un message avec le nom
   const user = useSelector((state:{user:UserState}) => state.user.value);
@@ -39,7 +41,7 @@ export default function Header() {
 
   // fonction gérant l'enregistrement d'un utilisateur en BDD puis mise à jour des données du reducer
   const handleRegister = () => {
-    fetch('http://localhost:3000/users/signup', {
+    fetch(`${BACKENDADRESS}/users/signup`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ username: signUpUsername, password: signUpPassword }),
@@ -56,7 +58,7 @@ export default function Header() {
 
   // fonction gérant la connection d'un utilisateur, puis mise à jour des données du reducer
   const handleConnection = () => {
-    fetch('http://localhost:3000/users/signin', {
+    fetch(`${BACKENDADRESS}/users/signin`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ username: signInUsername, password: signInPassword }),

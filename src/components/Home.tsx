@@ -9,6 +9,8 @@ import styles from '../styles/Home.module.css';
 import { HidenArticleState } from '../reducers/hiddenArticles';
 import { BookmarksState } from '../reducers/bookmarks';
 
+import { getBackendAdress } from '@/modules/adress';
+
 type ArticleObject = {
   title: string;
 	author: string;
@@ -18,6 +20,8 @@ type ArticleObject = {
    };
 
 export default function Home() {
+  const BACKENDADRESS:string = getBackendAdress();
+
   // données des reducers : favoris et articles cachés
   const bookmarks = useSelector((state : {bookmarks : BookmarksState }) => state.bookmarks.value);
   const hiddenArticles = useSelector((state : {hiddenArticles : HidenArticleState}) => state.hiddenArticles.value);
@@ -32,7 +36,8 @@ export default function Home() {
 
   // récupération des données au chargement
   useEffect(() => {
-    fetch('http://localhost:3000/articles')
+    console.log(BACKENDADRESS);
+    fetch(`${BACKENDADRESS}/articles`)
       .then(response => response.json())
       .then(data => {
         console.log(data);

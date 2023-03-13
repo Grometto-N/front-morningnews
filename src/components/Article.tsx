@@ -9,6 +9,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { addBookmark, removeBookmark } from '../reducers/bookmarks';
 import { hideArticle } from '../reducers/hiddenArticles';
 import {UserState} from '../reducers/user';
+import { getBackendAdress } from '@/modules/adress';
+
 
 // Composant permettant l'affichage d'un article
 
@@ -24,6 +26,7 @@ type ArticleProps = {
 export default function Article({title, author, description, urlToImage,isBookmarked,inBookmarks}: ArticleProps){
 
   const dispatch = useDispatch();
+  const BACKENDADRESS:string = getBackendAdress();
 
   // récupération des données sur l'utilisateur : servira pour les autorisations pour les favoris
 	const user = useSelector((state : {user : UserState}) => state.user.value);
@@ -39,7 +42,7 @@ export default function Article({title, author, description, urlToImage,isBookma
 		}
 
     // récupération de l'autorisation, puis ajout ou suppression des favoris
-		fetch(`http://localhost:3000/users/canBookmark/${user.token}`)
+		fetch(`${BACKENDADRESS}/${user.token}`)
 			.then(response => response.json())
 			.then(data => {
 				if (data.result && data.canBookmark) {

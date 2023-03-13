@@ -8,7 +8,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { addBookmark, removeBookmark } from '../reducers/bookmarks';
 import { UserState } from '@/reducers/user';
 
-
+import { getBackendAdress } from '@/modules/adress';
 
 type ArticleProps = {
 	title: string;
@@ -21,15 +21,20 @@ type ArticleProps = {
 
 export default function TopArticle({title, author, description,  urlToImage,  isBookmarked}: ArticleProps) {
   const dispatch = useDispatch();
+  const BACKENDADRESS:string = getBackendAdress();
+
+   // récupération des données sur l'utilisateur : servira pour les autorisations pour les favoris
   const user = useSelector((state:{user:UserState}) => state.user.value);
   const theArticle = {title, author, description,  urlToImage}
 
+  // fonction gérant l'ajout ou la suppression des favoris
   const handleBookmarkClick = () => {
     if (!user.token) {
       return;
     }
 
-    fetch(`http://localhost:3000/users/canBookmark/${user.token}`)
+    // récupération de l'autorisation, puis ajout ou suppression des favoris
+    fetch(`${BACKENDADRESS}/users/canBookmark/${user.token}`)
       .then(response => response.json())
       .then(data => {
         if (data.result && data.canBookmark) {
@@ -42,11 +47,13 @@ export default function TopArticle({title, author, description,  urlToImage,  is
       });
   }
 
+  // couleur de l'icône selon si l'article appartient ou non aux favoris 
   let iconStyle = {};
   if (isBookmarked) {
     iconStyle = { 'color': '#E9BE59' };
   }
 
+  // Affichage du composant
   return (
     <div className={styles.topContainer}>
       <img src={urlToImage} className={styles.image} alt={title} />
