@@ -11,7 +11,7 @@ import Moment from 'react-moment';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { login, logout } from '../reducers/user';
+import { logout } from '../reducers/user';
 import { removeAllBookmark } from '../reducers/bookmarks';
 import { unhideArticles } from '../reducers/hiddenArticles';
 import { UserState } from '../reducers/user';
@@ -32,10 +32,6 @@ const BACKENDADRESS:string = getBackendAdress();
   // initialisation des états : un pour la date, un pour l'enregistrement d'un utilisateur et un pour la connexion d'un utilisateur
   const [date, setDate] = useState<Date>();
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
-  const [signUpUsername, setSignUpUsername] = useState<string>('');
-  const [signUpPassword, setSignUpPassword] = useState<string>('');
-  const [signInUsername, setSignInUsername] = useState<string>('');
-  const [signInPassword, setSignInPassword] = useState<string>('');
 
 
   // récupération de la date du jour au chargement
@@ -59,7 +55,7 @@ const BACKENDADRESS:string = getBackendAdress();
   // contenus de la modale
   let modalContent;
   if (!user.token) {
-    modalContent=<Modale visible= {showModal}/>
+    modalContent=<Modale showModal={showModal}/>
   }
 
 

@@ -5,7 +5,12 @@ import { useDispatch, useSelector } from 'react-redux';
 import { login} from '../reducers/user';
 import { getBackendAdress } from '@/modules/adress';
 
-export default function Modale(visible:any){
+// type function pour la props d'affichage de la modale (inverse data flow)
+interface ShowProps {
+    showModal: (visible: boolean) => void;
+}
+
+export default function Modale({showModal}:ShowProps){
 
     const dispatch = useDispatch();
     const BACKENDADRESS:string = getBackendAdress();
@@ -33,7 +38,7 @@ export default function Modale(visible:any){
                     dispatch(login({ username: signUpUsername, token: data.token }));
                     setSignUpUsername('');
                     setSignUpPassword('');
-                    visible(false);
+                    showModal(false);
                 }
 
                 if(!data.result){
@@ -62,7 +67,7 @@ export default function Modale(visible:any){
                     dispatch(login({ username: signInUsername, token: data.token }));
                     setSignInUsername('');
                     setSignInPassword('');
-                    visible(false);
+                    showModal(false);
                 }
 
                 if(!data.result){

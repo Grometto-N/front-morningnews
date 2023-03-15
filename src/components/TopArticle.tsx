@@ -3,13 +3,17 @@ import styles from '../styles/TopArticle.module.css';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBookmark } from '@fortawesome/free-solid-svg-icons';
+import { Button,Modal } from 'antd';
 
+import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { addBookmark, removeBookmark } from '../reducers/bookmarks';
 import { UserState } from '@/reducers/user';
 
 import { getBackendAdress } from '@/modules/adress';
 
+
+// types
 type ArticleProps = {
 	title: string;
 	author: string;
@@ -34,9 +38,18 @@ export default function TopArticle({title, author, description,  urlToImage,  is
   const user = useSelector((state:{user:UserState}) => state.user.value);
   const theArticle:ArticleObject = {title, author, description,  urlToImage}
 
+  // état pour l'ouverture d'une modale si l'utilisateur essaye de bookmarker alors qu'il n'est pas connecté
+  const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
+
+  // fonction gérant l'affichage de la modale de connexion/inscription
+  const showModal = (visible : boolean) => {
+    setIsModalVisible(visible);
+  };
+
   // fonction gérant l'ajout ou la suppression des favoris
   const handleBookmarkClick = () => {
     if (!user.token) {
+      showModal(true)
       return;
     }
 
@@ -77,6 +90,14 @@ export default function TopArticle({title, author, description,  urlToImage,  is
         <h4>{author}</h4>
         <p>{description}</p>
       </div>
+      <Modal
+            width = {"350px"} 
+            open={isModalVisible} 
+            closable={true} 
+            onCancel={()=>showModal(false)} 
+            footer={[<Button key="submit" type="primary"  onClick={()=>showModal(false)}>OK</Button>]}>
+        You must be connected to have bookmarks
+      </Modal>
     </div>
   );
 }
