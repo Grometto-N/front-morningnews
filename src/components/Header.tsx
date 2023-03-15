@@ -17,6 +17,8 @@ import { unhideArticles } from '../reducers/hiddenArticles';
 import { UserState } from '../reducers/user';
 import { getBackendAdress } from '@/modules/adress';
 
+import Modale from './Modale';
+
 
 // définition du composant
 export default function Header() {
@@ -36,62 +38,11 @@ const BACKENDADRESS:string = getBackendAdress();
   const [signInPassword, setSignInPassword] = useState<string>('');
 
 
-
-
   // récupération de la date du jour au chargement
   useEffect(() => {
     setDate(new Date());
   }, []);
 
-  // fonction gérant l'enregistrement d'un utilisateur en BDD puis mise à jour des données du reducer
-  const handleRegister = () => {
-    async function registration(){
-      try{
-        const response = await fetch(`${BACKENDADRESS}/users/signup`, {
-                                  method: 'POST',
-                                  headers: { 'Content-Type': 'application/json' },
-                                  body: JSON.stringify({ username: signUpUsername, password: signUpPassword }),
-                                })
-        const data = await response.json();
-        
-        if (data.result) {
-          dispatch(login({ username: signUpUsername, token: data.token }));
-          setSignUpUsername('');
-          setSignUpPassword('');
-          setIsModalVisible(false)
-        }
-
-      }catch(exception){
-        console.log("erreur", exception)
-      }
-    }
-    registration();
-  };
-
-  // fonction gérant la connection d'un utilisateur, puis mise à jour des données du reducer
-  const handleConnection = () => {
-    async function connection(){
-      try{
-        const response = await fetch(`${BACKENDADRESS}/users/signin`, {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify({ username: signInUsername, password: signInPassword }),
-                          });
-        const data = await response.json();
-        
-        if (data.result) {
-          dispatch(login({ username: signInUsername, token: data.token }));
-          setSignInUsername('');
-          setSignInPassword('');
-          setIsModalVisible(false)
-        }
-
-      }catch(exception){
-        console.log("erreur", exception)
-      }
-    }
-    connection();
-  };
 
   // fonction gérant la déconexion de l'utilisateur : on efface les favoris et les données de l'utilisateur
   const handleLogout = () => {
@@ -100,30 +51,15 @@ const BACKENDADRESS:string = getBackendAdress();
   };
 
   // fonction gérant l'affichage de la modale de connexion/inscription
-  const showModal = () => {
-    setIsModalVisible(!isModalVisible);
+  const showModal = (visible : boolean) => {
+    setIsModalVisible(visible);
   };
 
 
   // contenus de la modale
   let modalContent;
   if (!user.token) {
-    modalContent = (
-      <div className={styles.registerContainer}>
-        <div className={styles.registerSection}>
-          <p>Sign-up</p>
-          <input type="text" placeholder="Username" id="signUpUsername" onChange={(e) => setSignUpUsername(e.target.value)} value={signUpUsername} />
-          <input type="password" placeholder="Password" id="signUpPassword" onChange={(e) => setSignUpPassword(e.target.value)} value={signUpPassword} />
-          <button id="register" onClick={() => handleRegister()}>Register</button>
-        </div>
-        <div className={styles.registerSection}>
-          <p>Sign-in</p>
-          <input type="text" placeholder="Username" id="signInUsername" onChange={(e) => setSignInUsername(e.target.value)} value={signInUsername} />
-          <input type="password" placeholder="Password" id="signInPassword" onChange={(e) => setSignInPassword(e.target.value)} value={signInPassword} />
-          <button id="connection" onClick={() => handleConnection()}>Connect</button>
-        </div>
-      </div>
-    );
+    modalContent=<Modale visible= {showModal}/>
   }
 
 
@@ -141,13 +77,13 @@ const BACKENDADRESS:string = getBackendAdress();
     if (isModalVisible) {
       userSection =
         <div className={styles.headerIcons}>
-          <FontAwesomeIcon onClick={showModal} className={styles.userSection} icon={faXmark} />
+          {/* <FontAwesomeIcon onClick={showModal} className={styles.userSection} icon={faXmark} /> */}
           <FontAwesomeIcon icon={faEye} onClick={() => dispatch(unhideArticles())} className={styles.unhideIcon} />
         </div>
     } else {
       userSection =
         <div className={styles.headerIcons}>
-          <FontAwesomeIcon onClick={showModal} className={styles.userSection} icon={faUser} />
+          <FontAwesomeIcon onClick={() =>showModal(true)} className={styles.userSection} icon={faUser} /> 
           <FontAwesomeIcon icon={faEye} onClick={() => dispatch(unhideArticles())} className={styles.unhideIcon} />
         </div>
     }
@@ -168,7 +104,7 @@ return (
         </div>
 
         {isModalVisible && <div id="react-modals">
-          <Modal getContainer="#react-modals" className={styles.modal} open={isModalVisible} closable={true} onCancel={showModal} footer={null}>
+          <Modal className={styles.modal} open={isModalVisible} closable={true} onCancel={()=>showModal(false)} footer={null}>
             {modalContent}
           </Modal>
         </div>}

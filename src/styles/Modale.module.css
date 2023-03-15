@@ -1,0 +1,30 @@
+.container{
+    display: flex;
+    flex-direction: column;
+	align-items: center;
+}
+
+.registerContainer {
+	display: flex;
+    flex-direction: row;
+	margin-bottom: 10px;
+	/* border-top: 0.5px lightgray solid; */
+}
+
+.registeredContainer {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.registerSection {
+	width: 250px;
+	margin: 10px;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+.message {
+    color:red;
+}

@@ -61,26 +61,6 @@
 	color: rgba(233, 190, 89);
 }
 
-.registerContainer {
-	display: flex;
-	margin-bottom: 10px;
-	border-top: 0.5px lightgray solid;
-}
-
-.registeredContainer {
-	display: flex;
-	justify-content: center;
-	align-items: center;
-}
-
-.registerSection {
-	width: 250px;
-	margin: 10px;
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-}
-
 .logoutSection {
 	display: flex;
 	align-items: center;
@@ -100,4 +80,8 @@
 
 .unhideIcon:hover {
 	opacity: 0.6;
+}
+
+.modal{
+	width:50vw;
 }
