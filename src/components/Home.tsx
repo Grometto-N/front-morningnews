@@ -1,4 +1,4 @@
-import react from 'react';
+// composant principal
 
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
@@ -11,13 +11,8 @@ import { BookmarksState } from '../reducers/bookmarks';
 
 import { getBackendAdress } from '@/modules/adress';
 
-type ArticleObject = {
-  title: string;
-	author: string;
-  content: string;
-	description : string;
-  urlToImage: string;
-   };
+// type(s) perso
+import { ArticleObject } from '@/modules/types';
 
 export default function Home() {
   const BACKENDADRESS:string = getBackendAdress();
@@ -30,7 +25,6 @@ export default function Home() {
   const [articlesData, setArticlesData] = useState<ArticleObject[]>([]);
   const [topArticle, setTopArticle] = useState<ArticleObject>({title: "",
                                                               author: "",
-                                                              content: "",
                                                               description : "",
                                                               urlToImage: "" });
 

@@ -7,14 +7,9 @@ import Article from './Article';
 import { useSelector } from 'react-redux';
 import {BookmarksState} from '../reducers/bookmarks';
 
+import { ArticleObject } from '@/modules/types';
 // Composant à afficher dans la page bookmarks : affiche tous les articles cochés favoris
 
-type ArticleObject = {
-	title: string;
-	author: string;
-	description : string;
-    urlToImage : string;
-};
 
 export default function Bookmarks() {
   // récupération des articles à afficher via le reducer correspondant

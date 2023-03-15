@@ -1,4 +1,4 @@
-import react from 'react';
+// Composant permettant l'affichage d'un article
 
 import Image from 'next/image';
 import styles from '../styles/Article.module.css';
@@ -13,21 +13,11 @@ import { hideArticle } from '../reducers/hiddenArticles';
 import {UserState} from '../reducers/user';
 import { getBackendAdress } from '@/modules/adress';
 
+// types perso
+import { ArticleProps } from '@/modules/types';
 
 
-
-// Composant permettant l'affichage d'un article
-
-type ArticleProps = {
-	title: string;
-	author: string;
-	description : string;
-  urlToImage : string;
-  isBookmarked : boolean;
-  inBookmarks : boolean;
-};
-
-export default function Article({title, author, description, urlToImage,isBookmarked,inBookmarks}: ArticleProps){
+export default function Article({title, author, description,urlToImage,isBookmarked,inBookmarks}: ArticleProps){
 
   const dispatch = useDispatch();
   const BACKENDADRESS:string = getBackendAdress();

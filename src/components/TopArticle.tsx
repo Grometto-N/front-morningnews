@@ -12,31 +12,17 @@ import { UserState } from '@/reducers/user';
 
 import { getBackendAdress } from '@/modules/adress';
 
+// types perso
+import { ArticleObject, ArticleProps } from '@/modules/types';
 
-// types
-type ArticleProps = {
-	title: string;
-	author: string;
-	description : string;
-  urlToImage : string;
-  isBookmarked : boolean;
-  inBookmarks : boolean;
-};
 
-type ArticleObject = {
-  title: string;
-	author: string;
-	description : string;
-  urlToImage : string;
-}
-
-export default function TopArticle({title, author, description,  urlToImage,  isBookmarked}: ArticleProps) {
+export default function TopArticle({title, author, description, urlToImage,  isBookmarked}: ArticleProps) {
   const dispatch = useDispatch();
   const BACKENDADRESS:string = getBackendAdress();
 
    // récupération des données sur l'utilisateur : servira pour les autorisations pour les favoris
   const user = useSelector((state:{user:UserState}) => state.user.value);
-  const theArticle:ArticleObject = {title, author, description,  urlToImage}
+  const theArticle:ArticleObject = {title, author, description, urlToImage}
 
   // état pour l'ouverture d'une modale si l'utilisateur essaye de bookmarker alors qu'il n'est pas connecté
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
