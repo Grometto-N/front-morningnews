@@ -27,7 +27,7 @@ export default function Modale({showModal}:ShowProps){
     const handleRegister = () => {
         async function registration(){
             try{
-                const response = await fetch(`${BACKENDADRESS}/users/signup`, {
+                const response = await fetch(`${BACKENDADRESS}/register`, {
                                 method: 'POST',
                                 headers: { 'Content-Type': 'application/json' },
                                 body: JSON.stringify({ username: signUpUsername, password: signUpPassword }),
@@ -56,21 +56,21 @@ export default function Modale({showModal}:ShowProps){
     const handleConnection = () => {
         async function connection(){
             try{
-                const response = await fetch(`${BACKENDADRESS}/users/signin`, {
+                const response = await fetch(`${BACKENDADRESS}/login_check`, {
                             method: 'POST',
                             headers: { 'Content-Type': 'application/json' },
                             body: JSON.stringify({ username: signInUsername, password: signInPassword }),
                             });
                 const data = await response.json();
-        
-                if (data.result) {
+
+                if (data.token) {
                     dispatch(login({ username: signInUsername, token: data.token }));
                     setSignInUsername('');
                     setSignInPassword('');
                     showModal(false);
                 }
 
-                if(!data.result){
+                if(!data.token){
                     setErrorMessage(data.error);
                 }
 

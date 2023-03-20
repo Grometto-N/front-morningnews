@@ -47,11 +47,15 @@ export default function Article({title, author, description,urlToImage,isBookmar
     // récupération de l'autorisation, puis ajout ou suppression des favoris
     async function getAuthorisation(){
       try{
-        console.log()
-        const response = await fetch(`${BACKENDADRESS}/users/canBookmark/${user.token}`);
+        const response = await fetch(`${BACKENDADRESS}/canBookmark`,{
+                                    method: 'GET',
+                                    headers: { 'Content-Type': 'application/json',
+                                                'Authorization': 'Bearer ' + user.token 
+                                              },
+                                });
         const data = await response.json();
 
-        if (data.result && data.canBookmark) {
+        if (data.result) {
 					if(isBookmarked) {
 						dispatch(removeBookmark(theArticle));
 					} else {
