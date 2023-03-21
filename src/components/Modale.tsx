@@ -25,6 +25,8 @@ export default function Modale({showModal}:ShowProps){
 
     // fonction gérant l'enregistrement d'un utilisateur en BDD puis mise à jour des données du reducer
     const handleRegister = () => {
+
+        // fonction gérant l'appel à la route d'enregistrement
         async function registration(){
             try{
                 const response = await fetch(`${BACKENDADRESS}/register`, {
@@ -54,6 +56,9 @@ export default function Modale({showModal}:ShowProps){
 
   // fonction gérant la connection d'un utilisateur, puis mise à jour des données du reducer
     const handleConnection = () => {
+       
+
+        // fonction gérant l'appel à la route de  connexion notre API
         async function connection(){
             try{
                 const response = await fetch(`${BACKENDADRESS}/login_check`, {
@@ -71,7 +76,13 @@ export default function Modale({showModal}:ShowProps){
                 }
 
                 if(!data.token){
-                    setErrorMessage(data.error);
+                     // on vérifie qu'il y a des données
+                    if(signInUsername=== "" || signInPassword=== ""){
+                        setErrorMessage("Missing or empty fields");
+                    }else{
+                        setErrorMessage("User not found or wrong password");
+                    }
+                    
                 }
 
             }catch(exception){
